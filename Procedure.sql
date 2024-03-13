@@ -22,7 +22,8 @@ p_id number,
 p_first_name varchar2 default null,
 p_last_name varchar2 default null,
 p_birth_date date default null,
-p_gender char default null) is
+p_gender char default null,
+p_result out varchar2) is
  begin
   update cb_customers set
       first_name=nvl(p_first_name,first_name),
@@ -30,5 +31,20 @@ p_gender char default null) is
       birth_date=nvl(p_birth_date,birth_date),
       gender=nvl(p_gender,gender)
         where id=p_id;
+         if sql%rowcount=0 then
+          p_result :='No row updated';
+          else
+          p_result :='1 row updated';
+          end if;
         commit;
         end;
+        
+set serveroutput on;
+declare 
+  a varchar2(90);
+begin
+  cb_customers_update(1,p_first_name =>'Ali', p_result=>a);
+end;
+
+
+drop procedure cb_customers_update;
